@@ -33,7 +33,27 @@ var arduino = Cylon.robot({
 /*
     I/O
  */
+var player1Ready = false;
+var player2Ready = false;
+
 io.on('connection', function (socket) {
+    socket.on('ready', function(data) {
+        if (parseInt(data.player) === 1) {
+            player1Ready = true;
+        }
+        else {
+            player2Ready = true;
+        }
+
+        // If both players are ready, go
+        if (player1Ready && player2Ready) {
+            io.sockets.emit('launch');
+
+            // Reset for next game
+            player1Ready = false;
+            player2Ready = false;
+        }
+    })
     socket.on('update', function(data) {
         arduino.devices[data.target].pwmWrite(parseInt(data.pwm));
         console.log(data);
