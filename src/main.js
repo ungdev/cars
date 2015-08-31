@@ -33,8 +33,20 @@ var arduino = Cylon.robot({
 /*
     I/O
  */
+
+function sanitizePWM(percent, min, max) {
+    return min + (max - min) * percent;
+}
+
+
 var player1Ready = false;
+var player1Min   = 100;
+var player1Max   = 150;
+
 var player2Ready = false;
+var player2Min   = 0;
+var player2Max   = 50;
+
 
 io.on('connection', function (socket) {
     socket.on('ready', function(data) {
@@ -53,9 +65,17 @@ io.on('connection', function (socket) {
             player1Ready = false;
             player2Ready = false;
         }
-    })
+    });
+
     socket.on('update', function(data) {
-        arduino.devices[data.target].pwmWrite(parseInt(data.pwm));
-        console.log(data);
+        var pwm;
+        if (parseInt(data.target) === 1){
+            pwm = sanitizePWM(parseFloat(data.speed), player1Min, player1Max);
+        }
+        else {
+            pwm = sanitizePWM(parseFloat(data.speed), player2Min, player2Max);
+        }
+
+        arduino.devices['pin'+data.target].pwmWrite(pwm);
     });
 });
