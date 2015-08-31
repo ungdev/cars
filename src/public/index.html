@@ -1,0 +1,23 @@
+<h1>It works</h1>
+
+<form>
+    <input type="text" id="pwm1">
+    <input type="text" id="pwm2">
+    <input type="submit">
+</form>
+<script src="/socket.io/socket.io.js"></script>
+<script src="jquery.min.js"></script>
+<script>
+    var socket = io.connect('http://localhost:8080');
+
+    $(function() {
+        $('form').on('submit', function(e) {
+            e.preventDefault();
+            socket.emit('update', {
+                pwm1: $("#pwm1").val(),
+                pwm2: $("#pwm2").val()}
+            );
+            return false;
+        });
+    });
+</script>
