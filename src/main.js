@@ -67,7 +67,7 @@ io.on('connection', function (socket) {
             pwm = player1Min + (player1Max - player1Min) * parseFloat(data.speed);
         }
         else {
-            pwm = player1Min + (player1Max - player1Min) * parseFloat(data.speed);
+            pwm = player2Min + (player2Max - player2Min) * parseFloat(data.speed);
         }
 
         try {
