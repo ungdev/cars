@@ -23,6 +23,7 @@ arduino.on("ready", function() {
     server.listen(8080);
 
     this.pinMode(9, five.Pin.PWM);
+    this.pinMode(10, five.Pin.PWM);
 });
 
 
@@ -58,7 +59,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on('update', function(data) {
-        console.log('ici');
         var pwm;
         if (parseInt(data.target) === 1){
             pwm = player1Min + (player1Max - player1Min) * parseFloat(data.speed);
@@ -68,9 +68,8 @@ io.on('connection', function (socket) {
         }
 
         pwm = parseInt(pwm, 10);
-
         try {
-            arduino.analogWrite(9, pwm);
+            arduino.analogWrite(8+parseInt(data.target), pwm);
         }
         catch(e) {}
     });
