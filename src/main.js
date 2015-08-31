@@ -33,8 +33,7 @@ var arduino = Cylon.robot({
  */
 io.on('connection', function (socket) {
     socket.on('update', function(data) {
-        arduino.devices.pin1.pwmWrite(parseInt(data.pwm1));
-        arduino.devices.pin2.pwmWrite(parseInt(data.pwm2));
+        arduino.devices.[data.target].pwmWrite(parseInt(data.pwm));
         console.log(data);
     });
 });
