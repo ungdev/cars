@@ -1,4 +1,4 @@
-var Cylon = require('cylon');
+var five = require('johnny-five');
 var express = require('express');
 var glob = require('glob');
 
@@ -16,30 +16,26 @@ server.listen(8080);
 /*
     Arduino
  */
-var port = glob.sync('/dev/ttyCAM*')[0] || '/dev/ttyACM0';
+var arduino = new five.Board();
 
-var arduino = Cylon.robot({
-    connections: {
-        arduino: { adaptor: 'firmata', port: port }
-    },
+arduino.on("ready", function() {
+    console.log("Ready!");
+    server.listen(8080);
 
-    devices: {
-        pin1: { driver: 'direct-pin', pin: 12 },
-        pin2: { driver: 'direct-pin', pin: 13 }
-    }
-}).start();
+    this.pinMode(9, five.Pin.PWM);
+});
 
 
 /*
     I/O
  */
 var player1Ready = false;
-var player1Min   = 100;
-var player1Max   = 150;
+var player1Min   = 0;
+var player1Max   = 255;
 
 var player2Ready = false;
 var player2Min   = 0;
-var player2Max   = 50;
+var player2Max   = 255;
 
 
 io.on('connection', function (socket) {
@@ -62,6 +58,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('update', function(data) {
+        console.log('ici');
         var pwm;
         if (parseInt(data.target) === 1){
             pwm = player1Min + (player1Max - player1Min) * parseFloat(data.speed);
@@ -71,7 +68,7 @@ io.on('connection', function (socket) {
         }
 
         try {
-            arduino.devices['pin'+data.target].pwmWrite(pwm);
+            arduino.analogWrite(9, pwm);
         }
         catch(e) {}
     });
