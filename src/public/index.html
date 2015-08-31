@@ -6,8 +6,8 @@
     <body>
         <select id="source">
             <option disabled selected></option>
-            <option value="pwm1">Ordinateur 1</option>
-            <option value="pwm2">Ordinateur 2</option>
+            <option value="1">Ordinateur 1</option>
+            <option value="2">Ordinateur 2</option>
         </select>
         <select id="songs">
             <option disabled selected></option>
@@ -162,11 +162,10 @@ Que toute la paille du pays.`
         <script>
             var socket = io.connect('http://localhost:8080');
 
-            var update = function () {
-                var value = $('#source').value();
+            var update = function (percent) {
                 socket.emit('update', {
-                    target: value,
-                    speed : $("#" + value).val()
+                    target: $('#source').val(),
+                    speed : percent
                 });
             };
         </script>
@@ -188,6 +187,7 @@ Que toute la paille du pays.`
         <script>
             setInterval(function () {
                 $('#speed').text(keyPressed);
+                update(keyPressed / MAX);
                 keyPressed = 0;
             }, 300);
         </script>
