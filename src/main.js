@@ -1,5 +1,6 @@
 var Cylon = require('cylon');
 var express = require('express');
+var glob = require('glob');
 
 
 /*
@@ -15,10 +16,11 @@ server.listen(8080);
 /*
     Arduino
  */
-// TODO: automatic port detection
+var port = glob.sync('/dev/ttyCAM*')[0] || '/dev/ttyACM0';
+
 var arduino = Cylon.robot({
     connections: {
-        arduino: { adaptor: 'firmata', port: '/dev/ttyACM0' }
+        arduino: { adaptor: 'firmata', port: port }
     },
 
     devices: {
@@ -33,7 +35,7 @@ var arduino = Cylon.robot({
  */
 io.on('connection', function (socket) {
     socket.on('update', function(data) {
-        arduino.devices.[data.target].pwmWrite(parseInt(data.pwm));
+        arduino.devices[data.target].pwmWrite(parseInt(data.pwm));
         console.log(data);
     });
 });
