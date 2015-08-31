@@ -69,6 +69,9 @@ io.on('connection', function (socket) {
         else {
             pwm = player2Min + (player2Max - player2Min) * parseFloat(data.speed);
         }
+
+        pwm = parseInt(pwm, 10);
+
         try {
             arduino.devices['pin'+data.target].pwmWrite(pwm);
         }
