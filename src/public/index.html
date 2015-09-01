@@ -190,6 +190,9 @@ Que toute la paille du pays`
                 update(keyPressed / MAX);
                 keyPressed = 0;
             }, 300);
+            
+            // Disable backspace
+            document.addEventListener('keydown', function (e) { e.preventDefault(); return false; });
         </script>
     </body>
 </html>
