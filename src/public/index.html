@@ -15,6 +15,7 @@
             <option value="marteaux">Les marteaux</option>
             <option value="rirette">La rirette</option>
             <option value="peaudecouille">Peau de couille</option>
+            <option value="a">aaaaa</option>
         </select>
         <span>Vitesse : <span id="speed">0</span> chars.(1/3)sec<sup>-1</sup></span>
         <div id="lyricsShower"></div>
@@ -160,7 +161,7 @@ Que toute la paille du pays.`
         </script>
 
         <script>
-            var socket = io.connect('http://localhost:8080');
+            var socket = io.connect('http://'+location.host);
 
             var update = function (percent) {
                 socket.emit('update', {
